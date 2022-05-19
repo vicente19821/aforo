@@ -10,7 +10,7 @@ var app = builder.Build();
 app.MapGet("/", () =>
 {
     app.Logger.LogInformation("Initial Home Get");
-    return "GET - Net 6 Running ... 09052022-v1.0.0 CI/CD in JENKINS JOB v1.0.0 AFORO255";
+    return "GET - Net 6 Running ... 18052022-v1.0.0 CI/CD in TRAVIS-CI v1.0.0 AFORO255";
 });
 
 app.MapPost("/", () =>
