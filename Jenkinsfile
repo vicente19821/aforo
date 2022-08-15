@@ -1,35 +1,39 @@
 pipeline {
     agent any
-
+ 
     stages {
         stage('SCM') {
             steps {
-               git branch: 'master', url: 'https://github.com/Stywar/JenkinsDevopsNet6'
+               git branch: 'master', url: 'https://github.com/vicente19821/aforo'
             }
         }
-       stage ('Build Net6.0') {
+        
+      stage ('Build Net6.0') {
            steps {
-            bat(script: 'dir' , returnStdout:true);
-            bat(script: 'dotnet restore' , returnStdout:true);
-            bat(script: 'dotnet build' , returnStdout:true);
-            bat(script: 'dotnet test' , returnStdout:true);
+        
+            sh 'dotnet restore';
+            sh 'dotnet build' ;
+            sh 'dotnet test';
+         
            }
        }
-       stage ("Docker Build") {
+       
+        stage ("Docker Build") {
            
            steps{
              // docker login  
-             bat(script: 'docker build -t antony0618/servicenet6 .' , returnStdout:true);
-             bat(script: 'docker push antony0618/servicenet6' , returnStdout:true);  
+             sh 'docker build -t vicente1982/afoto .' ;
+            sh  'docker push vicente1982/afoto';  
            }
-       }
-       stage ("Deploy AKS") {
+       }   
+     stage ("Deploy AKS") {
            steps {
-            bat(script: 'az aks get-credentials --resource-group aforo255Devops --name aks-devopsMayo22 & kubectl config get-contexts --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
-            bat(script: 'kubectl config use-context aks-devopsMayo22 --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
-            bat(script: 'kubectl apply -f k8s.yml --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
-            bat(script: 'kubectl rollout restart deployment app-deployment --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
+           sh 'az login --service-principal --username 91ff72d0-e273-4642-aed7-94b6a5ceb1a9  --password tbN8Q~izQextZOBU-CVCZz6I2dtH0E2-XVCacavr  --tenant 1014e0df-cb4f-4c6e-8e59-001832ca00fa';
+            sh 'az account set --subscription 7a349d44-09aa-4e98-83e8-081994570721 & kubectl config get-contexts --kubeconfig=${KUBE_PATH_CONFIG}';
+            sh 'kubectl apply -f k8s.yml --kubeconfig=${KUBE_PATH_CONFIG}';
+            sh  'kubectl rollout restart deployment app-deployment --kubeconfig=${KUBE_PATH_CONFIG}';
            }
        }
+       
     }
 }
